@@ -8,9 +8,9 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 
 # Defines the starting values
 TARGET_VALUE = int(50)
-MOTOR_SPEED = 20
-WHEEL_DIAMETER = 20
-AXLE_TRACK = 100
+MOTOR_SPEED = int(20)
+WHEEL_DIAMETER = int(20)
+AXLE_TRACK = int(100)
 PROPORTIONAL_COEFFICIENT = float(0.5)
 INTEGRAL_COEFFICIENT = float(1)
 DERIVATIVE_COEFFICIENT = float(4)
