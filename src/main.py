@@ -7,17 +7,17 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
 # Defines the starting values
-TARGET_VALUE = int(50)
-MOTOR_SPEED = int(20)
-WHEEL_DIAMETER = int(20)
-AXLE_TRACK = int(100)
-PROPORTIONAL_COEFFICIENT = float(0.5)
-INTEGRAL_COEFFICIENT = float(1)
-DERIVATIVE_COEFFICIENT = float(4)
+TARGET_VALUE = 50
+MOTOR_SPEED = 20
+WHEEL_DIAMETER = 20
+AXLE_TRACK = 100
+PROPORTIONAL_COEFFICIENT = 0.5
+INTEGRAL_COEFFICIENT = 1
+DERIVATIVE_COEFFICIENT = 4
 
-prevError = int(0)
-prevErrors = list()
-integralValue = int(0)
+prevError = 0
+prevErrors = []
+integralValue = 0
 
 # Initialize the EV3Brick
 ev3 = EV3Brick()
@@ -29,10 +29,10 @@ driveBase = DriveBase(motorA, motorB, )
 # Initialize and configure the color / light intensity sensor
 lightSensor = ColorSensor("S1")
 
-def proportionalController(error, coefficient):
+def proportionalController(error: int, coefficient: float) -> float:
     return error * coefficient
 
-def integralController(errorValues, cachedSum, newError, coefficient, maxLength = 1000):
+def integralController(errorValues: int[], cachedSum: int, newError: int, coefficient: float, maxLength: int = 1000) -> dict:
     errorValues.append(newError)
     cachedSum += newError
 
@@ -45,7 +45,7 @@ def integralController(errorValues, cachedSum, newError, coefficient, maxLength 
 
     return {integralValue: cachedSum * coefficient, errorValues: errorValues}
 
-def derivativeController(prevError, newError, coefficient):
+def derivativeController(prevError: int, newError: int, coefficient: float) -> float:
     return (prevError - newError) * coefficient
 
 lightIntensity = lightSensor.reflection()
