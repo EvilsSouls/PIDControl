@@ -6,29 +6,32 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.robotics import DriveBase
 #from pybricks.media.ev3dev import SoundFile, ImageFile
 
-# Defines the starting values
-BLACK = 10
-WHITE = 50
-TARGET_VALUE = (BLACK + WHITE) / 2 # Gets the target value by calculating what percent of light reflected would equal 50% white and 50% black (by getting the mean value between the two values) 
+# Defines the starting tuning values
+BLACK = 9
+WHITE = 58
+TARGET_VALUE = (BLACK + WHITE) / 2 # Gets the target value by calculating what percent of light reflected would equal 50% white and 50% black (by getting the mean value between the two values)
+
 MOTOR_SPEED = 300
 WHEEL_DIAMETER = 55.5
 AXLE_TRACK = 114
+
 PROPORTIONAL_COEFFICIENT = 2.5
 INTEGRAL_COEFFICIENT = 0
 DERIVATIVE_COEFFICIENT = 0
 
+# Initializes starting values
 prevError = 0
 prevErrors = []
 integralCachedSum = 0
 
-# Initialize the EV3Brick
+# Initializes the EV3Brick
 ev3 = EV3Brick()
-# Initialize and configure the motors
+# Initializes and configures the motors
 motorA = Motor(Port.A)
 motorB = Motor(Port.D)
 driveBase = DriveBase(motorA, motorB, WHEEL_DIAMETER, AXLE_TRACK)
 
-# Initialize and configure the color / light intensity sensor
+# Initializes and configures the color / light intensity sensor
 lightSensor = ColorSensor(Port.S4)
 
 def proportionalController(error: int, coefficient: float) -> float:
