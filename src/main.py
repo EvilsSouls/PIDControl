@@ -7,17 +7,19 @@ from pybricks.robotics import DriveBase
 #from pybricks.media.ev3dev import SoundFile, ImageFile
 
 # Defines the starting tuning values
-BLACK = 8
-WHITE = 59
+BLACK = 7
+WHITE = 61
 TARGET_VALUE = (BLACK + WHITE) / 2 # Gets the target value by calculating what percent of light reflected would equal 50% white and 50% black (by getting the mean value between the two values)
 
-MOTOR_SPEED = 600
+MOTOR_SPEED = 300
 WHEEL_DIAMETER = 82
 AXLE_TRACK = 120
 
 PROPORTIONAL_COEFFICIENT = 1
-INTEGRAL_COEFFICIENT = 0.05
+INTEGRAL_COEFFICIENT = 0.5
 DERIVATIVE_COEFFICIENT = 0
+
+debug = True
 
 # Initializes starting values
 prevError = 0
@@ -52,7 +54,11 @@ def integralController(errorValues, cachedSum: int, newError: int, maxLength: in
 def derivativeController(prevError: int, newError: int, coefficient: float) -> float:
     return (prevError - newError) * coefficient
 
+if debug:
+    i = 0
+
 while True:
+
     lightIntensity = lightSensor.reflection()
     error = TARGET_VALUE - lightIntensity
 
@@ -67,7 +73,21 @@ while True:
 
     turnRate = proportionalValue + integralValue + derivativeValue
 
-    ev3.screen.print(turnRate)
+    if(debug):
+        i += 1
+        ev3.screen.print("Iteration " + i)
+        ev3.screen.print("Prop Value: " + proportionalValue)
+        ev3.screen.print("Inte Value: " + integralValue)
+        ev3.screen.print("Deri Value: " + derivativeValue)
+        ev3.screen.print("Turn Rate: " + turnRate)
 
     # Drives the Robot
-    driveBase.drive(MOTOR_SPEED, turnRate)
+    if not(debug):
+        driveBase.drive(MOTOR_SPEED, turnRate)
+    else:
+        driveBase.drive(MOTOR_SPEED, turnRate)
+        wait(100)
+        driveBase.stop()
+        
+        while not(ev3.buttons.pressed):
+            wait(1)
