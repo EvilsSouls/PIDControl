@@ -7,16 +7,16 @@ from pybricks.robotics import DriveBase
 #from pybricks.media.ev3dev import SoundFile, ImageFile
 
 # Defines the starting tuning values
-BLACK = 9
-WHITE = 58
+BLACK = 8
+WHITE = 59
 TARGET_VALUE = (BLACK + WHITE) / 2 # Gets the target value by calculating what percent of light reflected would equal 50% white and 50% black (by getting the mean value between the two values)
 
-MOTOR_SPEED = 300
-WHEEL_DIAMETER = 55.5
-AXLE_TRACK = 114
+MOTOR_SPEED = 600
+WHEEL_DIAMETER = 82
+AXLE_TRACK = 120
 
-PROPORTIONAL_COEFFICIENT = 2.5
-INTEGRAL_COEFFICIENT = 0
+PROPORTIONAL_COEFFICIENT = 1
+INTEGRAL_COEFFICIENT = 0.05
 DERIVATIVE_COEFFICIENT = 0
 
 # Initializes starting values
@@ -66,6 +66,8 @@ while True:
     derivativeValue = derivativeController(prevError, error, DERIVATIVE_COEFFICIENT)
 
     turnRate = proportionalValue + integralValue + derivativeValue
+
+    ev3.screen.print(turnRate)
 
     # Drives the Robot
     driveBase.drive(MOTOR_SPEED, turnRate)
