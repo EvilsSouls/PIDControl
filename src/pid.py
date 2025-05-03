@@ -6,31 +6,42 @@ class PIDControl:
         self.propGain = propGain
         self.integGain = integGain
         self.derivGain = derivGain
-        
+
         self.integSum = 0
         self.prevError = 0
 
-        self.debug = debug
+        self.outOfControl = False
+
+        self.debug = False
     
-    def calcProp(error: int) -> float:
+    def setTargetVal(self, newVal: int):
+        self.targetVal = newVal
+
+    def calcProp(self, error: int) -> float:
         return error * self.propGain
 
-    def calcInteg(error: int) -> float:
+    def calcInteg(self, error: int) -> float:
         self.integSum += error
+
+        if(self.integSum >= 1000):
+            self.outOfControl = True
+        elif(self.outOfControl):
+            self.outOfControl = False
+
         return self.integSum * self.integGain
 
-    def calcDeriv(error: int) -> float:
-        return (error - prevError) * self.derivGain
+    def calcDeriv(self, error: int) -> float:
+        return (error - self.prevError) * self.derivGain
 
-    def calcPID(measuredVal: int):
+    def calcPID(self, measuredVal: int):
         error = self.targetVal - measuredVal
 
-        prop = calcProp(error)
-        integ = calcInteg(error)
-        deriv = calcDeriv(error)
+        prop = self.calcProp(error)
+        integ = self.calcInteg(error)
+        deriv = self.calcDeriv(error)
 
         pidOut = prop + integ + deriv
 
-        prevError = error
+        self.prevError = error
 
         return pidOut

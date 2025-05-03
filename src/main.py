@@ -1,36 +1,44 @@
 #!/usr/bin/env pybricks-micropython
-from pybricks.hubs import EV3Brick
-from pybricks.ev3devices import (Motor, ColorSensor)
-from pybricks.parameters import Port, Stop, Direction, Button, Color
-from pybricks.tools import wait, StopWatch, DataLog
-from pybricks.robotics import DriveBase
-from ./pid import PIDControl
+from robot import Robot
+from pybricks.tools import wait
+from pybricks.media.ev3dev import Font
 
-# Defines the starting tuning values
-BLACK = 7
-WHITE = 61
+robot = Robot()
 
-MOTOR_SPEED = 300
-WHEEL_DIAMETER = 82
-AXLE_TRACK = 120
+robot.ev3.screen.set_font(Font('Lucida', 8))
 
-PROPORTIONAL_GAIN = 1
-INTEGRAL_GAIN = 0.5
-DERIVATIVE_GAIN = 0
+robot.reset()
 
-# Initializes the EV3Brick
-ev3 = EV3Brick()
-# Initializes and configures the motors
-motorA = Motor(Port.A)
-motorB = Motor(Port.D)
-driveBase = DriveBase(motorA, motorB, WHEEL_DIAMETER, AXLE_TRACK)
-# Initializes and configures the color / light intensity sensor
-lightSensor = ColorSensor(Port.S4)
+robot.followDegree(robot.MOTOR_SPEED, 0, condition=lambda: robot.lightSensor.reflection() > 25)
+robot.ev3.speaker.beep()
 
-pid = PIDControl((BLACK + WHITE) / 2, PROPORTIONAL_GAIN, INTEGRAL_GAIN, DERIVATIVE_GAIN)
+robot.followLine(robot.MOTOR_SPEED * 0.75, condition=lambda: robot.ultrasonicSensor.distance() < 335)
+robot.ev3.speaker.beep()
 
-while True:
-    turnRate = pid.calcPID(lightSensor.reflection())
+robot.followDegree(robot.MOTOR_SPEED * 1.75, robot.gyroSensor.angle(), condition=lambda: robot.lightSensor.reflection() > 9)
+robot.ev3.speaker.beep()
 
-    # Drives the Robot
-    driveBase.drive(MOTOR_SPEED, turnRate)
+robot.driveBase.reset()
+robot.followLine(robot.MOTOR_SPEED * 0.6, condition=lambda: robot.lightSensor.reflection() > 10 or robot.driveBase.distance() < 210)
+robot.ev3.speaker.beep()
+
+robot.driveBase.turn(25)
+robot.driveBase.straight(40)
+robot.grasp()
+robot.ev3.speaker.beep()
+
+robot.driveBase.turn(-130)
+
+robot.ev3.speaker.beep()
+
+robot.driveBase.straight(50)
+robot.driveBase.reset()
+robot.followDegree(robot.MOTOR_SPEED, robot.gyroSensor.angle(), condition=lambda: robot.lightSensor.reflection() > 10 or robot.driveBase.distance() < 9000)
+robot.release()
+
+robot.ev3.speaker.beep()
+robot.turn(-165)
+#robot.followDegree
+
+while(True):
+    wait(10)
